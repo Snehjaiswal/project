@@ -71,7 +71,7 @@ app.post('/postdata', (req, res) => {
             }
 
             else {
-                res.send(result)
+                res.send({msg:"Success"})
 
             }
         })
