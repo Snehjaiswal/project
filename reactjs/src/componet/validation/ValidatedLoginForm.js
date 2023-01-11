@@ -84,13 +84,14 @@ const ValidatedLoginForm = () => (
                     paddingTop: "50px",
                     paddingBottom: "40px",
                     marginTop: "100px",
-                    backgroundColor:"bisque"
+                    backgroundColor:"#b56e79"
 
                 }}>
+
                     <label htmlFor="email">Name</label>
                     <input
                         name="name"
-                        
+
                         type="name"
                         placeholder="Enter your name"
                         value={values.name}
