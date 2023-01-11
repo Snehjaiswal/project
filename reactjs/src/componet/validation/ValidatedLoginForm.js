@@ -84,7 +84,7 @@ const ValidatedLoginForm = () => (
                     paddingTop: "50px",
                     paddingBottom: "40px",
                     marginTop: "100px",
-                    backgroundColor:"#b56e79"
+                    backgroundColor:"#9e7d8b"
 
                 }}>
 

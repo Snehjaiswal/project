@@ -115,7 +115,7 @@ const Loginpage = () => {
                             borderRadius: "2px",
                             marginRight: "590px",
                             marginTop: "200px",
-                            backgroundColor: " #313131",
+                            backgroundColor: "#1b102e",
                             textAlign: "center"
 
                         }}
