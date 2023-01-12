@@ -11,50 +11,50 @@ function Login1() {
     const [password, setpassword] = useState("");
 
     const Login = () => {
-        if (name == "") {
-            alert("Please fill name")
-        } else if (email == "") {
-            alert("Please fill email")
-        } else if (password == "") {
-            alert("Please fill PAssword")
-        } else {
-            var data = JSON.stringify({
-                "name": name,
-                "email": email,
-                "password": password
+        // if (name == "") {
+        //     alert("Please fill name")
+        // } else if (email == "") {
+        //     alert("Please fill email")
+        // } else if (password == "") {
+        //     alert("Please fill PAssword")
+        // } else {
+        var data = JSON.stringify({
+            "name": name,
+            "email": email,
+            "password": password
+        });
+
+        var config = {
+            method: 'post',
+            url: 'http://localhost:5000/postdata',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios({
+            method: 'post',
+            url: 'http://localhost:5000/postdata',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        })
+            .then(function (response) {
+                if (response.data.success == true) {
+
+                    navigate('/show')
+                }
+            })
+            .catch(function (error) {
+                const errorLen = error.response.data.errors
+                for (let i = 0; i < errorLen.length; i++) {
+                    console.log(errorLen[i].msg);
+                }
             });
 
-            var config = {
-                method: 'post',
-                url: 'http://localhost:5000/postdata',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: data
-            };
-
-            axios({
-                method: 'post',
-                url: 'http://localhost:5000/postdata',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: data
-            })
-                .then(function (response) {
-                    console.log(response.data.msg);
-                    if (response.data.msg != "Success") {
-                        alert(response.data.msg)
-                    } else {
-                        navigate('/show')
-
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-
-        }
+        // }
     }
 
     return (

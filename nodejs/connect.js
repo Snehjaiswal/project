@@ -5,7 +5,11 @@ const bcrypt = require("bcryptjs");
 const sendMail = require('./sendmail')
 const OtpUtil = require('./otp')
 const app = express()
+const { signupValidation, loginValidation } = require('./validation.js');
+const { body, validationResult, check } = require('express-validator');
+
 const cors = require('cors');
+
 const corsOptions = {
     origin: 'http://localhost:3000',
     credentials: true,            //access-control-allow-credentials:true
@@ -36,59 +40,50 @@ app.get('/', (req, res) => {
             return console.log(err)
 
         }
-        // return console.log(res,'=---------------------')
         res.send(result)
     })
-    // res.res('hiii hello ')
 
 })
-app.post('/postdata', (req, res) => {
-    const data = req.body
-    pool.query('select * from users where email = "' + data.email + '"', (err, result) => {
-        if (result.length != 0 )  {
-            console.log("this email alreay exist");
-            return res.send({ msg: "this email alreay exist." });
+app.post('/postdata',
+    signupValidation,
+    (req, res) => {
+        const errors = validationResult(req);
+        const data = req.body
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                errors: errors.array()
+            });
         }
+        pool.query('INSERT INTO users set ?'
+
+            , data, (err, result, field) => {
+
+                if (err) {
+                    res.send(err)
+                }
+                else {
+                    res.status(200).json({
+                        success: true,
+                        message: 'Login successful',
+                    })
+                }
+            })
+
+        const { otp, expires } = OtpUtil.generateOTP(data.email);
+
+        const url = ` OTP: ${otp} `; //url for email
+
+        sendMail.sendVerificationMail(data.email, url, "Verify your email address");
+
+
+
+        console.log("Error", Error);
+
     })
-    const passwordHash = bcrypt.hash(data.password, 10);
-    if (data.password.length < 6)
-        return res
-
-            .send({ msg: "Password must be at least 6 characters." });
-    if (!data.name || !data.email || !data.password)
-        return res.send({ msg: "Please fill in all fields." });
-    if (!validateEmail(data.email))
-        return res.send({ msg: "Invalid emails." });
-    console.log(data, '.................');
-    pool.query('INSERT INTO users set ?'
-        , data, (err, result, field) => {
-
-            if (err) {
 
 
-                return console.log(err)
-
-            }
-
-            else {
-                res.send({msg:"Success"})
-
-            }
-        })
-
-    const { otp, expires } = OtpUtil.generateOTP(data.email);
-
-    const url = ` OTP: ${otp} `; //url for email
-
-    sendMail.sendVerificationMail(data.email, url, "Verify your email address");
-
-})
-// // email validation
-function validateEmail(email) {
-    const re =
-        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-}
 app.put(`/update/:Id`, (req, res) => {
     console.log(req.params.Id, '.....................');
     const data = [req.body.name, req.body.lastname, req.body.phone, req.body.roll, req.params.Id]
@@ -106,8 +101,8 @@ app.put(`/update/:Id`, (req, res) => {
 })
 app.delete("/delete/:Id", (req, res) => {
     const id = req.params.Id
-    console.log(id,'............');
-    pool.query(`DELETE FROM users WHERE id= ${id}`,  (err, result) => {
+    console.log(id, '............');
+    pool.query(`DELETE FROM users WHERE id= ${id}`, (err, result) => {
         if (err) {
             res.send(err, "_____===============")
         }

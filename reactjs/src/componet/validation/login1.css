@@ -10,7 +10,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #8495c4;
+  background-color: rgb(172, 199, 230);
 }
 .container {
   position: relative;
