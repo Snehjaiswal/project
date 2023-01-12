@@ -6,19 +6,9 @@ import axios from "axios";
 
 function Login1() {
     const navigate = useNavigate();
-
-    // const [first, setfirst] = useState('')
     const [name, setName] = useState('')
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");
-    // const [cpassword, setcPassword] = useState('')
-
-
-    const Signup = () => {
-        alert("okk")
-    }
-
-
 
     const Login = () => {
         if (name == "") {
@@ -26,7 +16,7 @@ function Login1() {
         } else if (email == "") {
             alert("Please fill email")
         } else if (password == "") {
-            alert("Please PAssword")
+            alert("Please fill PAssword")
         } else {
             var data = JSON.stringify({
                 "name": name,
@@ -70,7 +60,7 @@ function Login1() {
     return (
         <div>
             <div className="container">
-                <h3>Signup</h3>
+                <h3 style={{ textAlign: "center" }}>Login</h3>
                 <div className='form' >
                     <div className="field email-field">
                         <div className="field name">
