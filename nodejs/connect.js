@@ -147,8 +147,6 @@ app.get('/role', (req, res) => {
     })
 
 })
-
-
 app.get('/user', (req, res) => {
 
     res.header("Access-Control-Allow-Origin", "*");

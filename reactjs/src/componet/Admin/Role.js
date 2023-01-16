@@ -58,8 +58,6 @@ function Role() {
    
   ];
 
-  
-
 function RoleGet(){
 
   var config = {
