@@ -58,7 +58,7 @@ function Login1() {
     }
 
     return (
-        <div>
+        <div className='body1'>
             <div className="container">
                 <h3 style={{ textAlign: "center" }}>Login</h3>
                 <div className='form' >

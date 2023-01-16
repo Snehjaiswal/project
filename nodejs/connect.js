@@ -113,4 +113,52 @@ app.delete("/delete/:Id", (req, res) => {
         }
     })
 })
+
+// Create Role
+
+app.post('/addrole', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    pool.query('INSERT INTO `role`( `Role`, `role_summery`) VALUES ("' + req.body.role + '","' + req.body.summery + '")', (err, result) => {
+
+        // console.log("result-",result);
+        res.send({ msg: "Success full add!" })
+    })
+
+})
+app.post('/adduser', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    pool.query('INSERT INTO `users` ( `name`, `email`, `password`, `role_id`) VALUES ( "' + req.body.name + '", "' + req.body.email + '", "' + req.body.password + '","' + req.body.role_id + '");', (err, result) => {
+
+        // console.log("result-",result);
+        res.send({ msg: "Success full add!" })
+    })
+
+})
+app.get('/role', (req, res) => {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    pool.query('select * from role', (err, result) => {
+
+        console.log("result-", result);
+        res.send(result)
+    })
+
+})
+
+
+app.get('/user', (req, res) => {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    pool.query(' SELECT * FROM `users` JOIN `role` ON users.role_id = role.id ', (err, result) => {
+
+        console.log("result-", result);
+        res.send(result)
+    })
+
+})
+
 app.listen(port, () => console.log(`Listening on port ${port}`))
