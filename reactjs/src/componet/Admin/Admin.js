@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import DataTable from 'react-data-table-component';
@@ -16,10 +17,12 @@ function Admin() {
     const [password, setpassword] = useState("");
     const [roleId, setroleId] = useState("");
     const [data1, setdata1] = useState([]);
+    const [data2, setdata2] = useState([]);
+
     const [getuser, setuser] = useState([]);
 
     // console.log("roleId", roleId);
-
+    const navigate = useNavigate();
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -28,6 +31,7 @@ function Admin() {
     useEffect(() => {
         RoleGet()
         userGet()
+        permission_user()
     }, [refresh]);
 
 
@@ -49,6 +53,10 @@ function Admin() {
             selector: row => row.password,
         },
         {
+            name: 'Permission ',
+            selector: row => row.permission,
+        },
+        {
             name: 'Role ',
             selector: row => row.Role,
         },
@@ -58,7 +66,28 @@ function Admin() {
         }
     ];
 
+    const customStyles = {
+        rows: {
+            style: {
+                minHeight: '72px', // override the row height
 
+            }, background: {
+                default: '#000',
+            },
+        },
+        headCells: {
+            style: {
+                paddingLeft: '8px', // override the cell padding for head cells
+                paddingRight: '8px',
+            },
+        },
+        cells: {
+            style: {
+                paddingLeft: '8px', // override the cell padding for data cells
+                paddingRight: '8px',
+            },
+        },
+    };
     const userAdd = () => {
         console.log("check=>", name, email, password, roleId);
         var config = {
@@ -124,24 +153,58 @@ function Admin() {
             });
     }
 
+    const permission_user = () => {
 
+        var config = {
+            method: 'get',
+            url: 'http://localhost:5000/permission',
+        };
+
+        axios(config)
+            .then(function (response) {
+                // console.log("okk", response.data);
+                setdata2(response.data)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 
 
 
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            {/* <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="#">Create User</a>
+                    <a className="navbar-brand" href="#">Navbar</a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon" />
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                        <form className="d-flex  ms-auto">
+                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                            <button className="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                        <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <li className="nav-item">
+                                <a className="nav-link active" aria-current="page" href="#">Home</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link active" aria-current="page" href="#">Permission</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link active" aria-current="page" onClick={()=>navigate('/role')}>Role</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link active" aria-current="page" href="#">Profile</a>
+                            </li>
 
+
+                        </ul>
 
                     </div>
                 </div>
-            </nav>
+            </nav> */}
 
 
 
@@ -170,16 +233,19 @@ function Admin() {
                             <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
                             <input type="text" className="form-control" id="exampleInputPassword1" onChange={(e) => setpassword(e.target.value)} />
                             <div id="emailHelp" className="form-text">Enter Your password.</div>
-                        </div>   <div className="mb-3">
-                            <label htmlFor="exampleInputPassword1" className="form-label">Role Id</label>
-                            {/* <input type="text" className="form-control" id="exampleInputPassword1" onChange={(e)=>setroleId(e.target.value)} /> */}
+                        </div>
+
+
+                        <div className="mb-3">
+                            {/* <label htmlFor="exampleInputPassword1" className="form-label">Role Id</label> */}
+
                             <Dropdown>
                                 <Dropdown.Toggle variant="success" id="dropdown-basic" >
-                                    Dropdown Button
+                                    Select Role
                                 </Dropdown.Toggle>
 
-                                <Dropdown.Menu > 
-                                    {data1.map((val) =>(
+                                <Dropdown.Menu >
+                                    {data1 && data1.map((val) => (
 
                                         <Dropdown.Item onClick={() => setroleId(val.id)} key={val.id}>{val.Role}</Dropdown.Item>
                                     )
@@ -189,9 +255,32 @@ function Admin() {
                                 </Dropdown.Menu>
                             </Dropdown>
 
+
                             <div id="emailHelp" className="form-text">Decide which Role.</div>
                         </div>
 
+
+                        <div className="mb-3">
+
+                            <Dropdown>
+                                <Dropdown.Toggle variant="success" id="dropdown-basic" >
+                                    Permission
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu >
+                                    {data2 && data2.map((val) => (
+
+                                        <Dropdown.Item onClick={() => setroleId(val.id)} key={val.id}>{val.permission}</Dropdown.Item>
+                                    )
+
+                                    )}
+
+                                </Dropdown.Menu>
+                            </Dropdown>
+
+
+                            <div id="emailHelp" className="form-text">Decide which Role.</div>
+                        </div>
                     </div>
 
 
@@ -214,7 +303,7 @@ function Admin() {
             <DataTable
                 columns={columns}
                 data={getuser}
-
+                customStyles={customStyles}
             />
 
         </>

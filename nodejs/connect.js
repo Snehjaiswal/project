@@ -27,7 +27,7 @@ const pool = createPool({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'node'
+    database: 'anmol'
 })
 
 
@@ -126,6 +126,17 @@ app.post('/addrole', (req, res) => {
     })
 
 })
+
+app.post('/addPermission', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    pool.query('INSERT INTO `permission_user`( `permission`, `work`) VALUES ("' + req.body.permission + '","' + req.body.work + '")', (err, result) => {
+
+        // console.log("result-",result);
+        res.send({ msg: "Success full add!" })
+    })
+
+})
 app.post('/adduser', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -151,12 +162,60 @@ app.get('/user', (req, res) => {
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    pool.query(' SELECT * FROM `users` JOIN `role` ON users.role_id = role.id ', (err, result) => {
+    pool.query(' SELECT * FROM `users` JOIN `role` ON users.role_id = role.id  JOIN `permission_user` ON  users.permission_id=permission_user.id', (err, result) => {
 
         console.log("result-", result);
         res.send(result)
     })
 
 })
+
+
+app.get('/permission', (req, res) => {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    pool.query(' SELECT * FROM `permission_user`', (err, result) => {
+
+        console.log("result-", result);
+        res.send(result)
+    })
+
+})
+
+
+app.post('/finduser', (req, res) => {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    pool.query(' SELECT * FROM `users` JOIN `role` ON users.role_id = role.id  JOIN `permission_user` ON  users.permission_id=permission_user.id WHERE users.id='+req.body.id , (err, result) => {
+
+        console.log("result-", result);
+        res.send({data:result})
+    })
+
+})
+
+
+
+
+
+app.post('/login', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    pool.query('SELECT * FROM `users` WHERE email="'+req.body.email+'" AND password="'+req.body.password+'"', (err, result) => {
+
+       if(result.length > 0){
+
+           res.send({ msg: "Login success!",data:result})
+       }else{
+        res.send({ msg: "Feild" })
+
+       }
+    })
+
+})
+
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
