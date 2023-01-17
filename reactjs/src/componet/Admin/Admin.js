@@ -10,7 +10,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 function Admin() {
 
     const [show, setShow] = useState(false);
-
+    const [refresh, setRefresh] = useState(false);
     const [name, setname] = useState("");
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");
@@ -25,11 +25,10 @@ function Admin() {
     const handleShow = () => setShow(true);
 
 
-
     useEffect(() => {
         RoleGet()
         userGet()
-    }, []);
+    }, [refresh]);
 
 
     const columns = [
@@ -80,6 +79,7 @@ function Admin() {
             .then(function (response) {
                 // console.log("response-", response.data);
                 handleClose()
+                setRefresh(!refresh)
             })
             .catch(function (error) {
                 console.log(error);

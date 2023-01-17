@@ -6,42 +6,44 @@ import axios from 'axios'
 
 
 function Role() {
+  const [refresh, setRefresh] = useState(false);
 
-  const [show, setShow] = useState(false); 
-   const [role, setrole] = useState("");
+  const [show, setShow] = useState(false);
+  const [role, setrole] = useState("");
   const [summery, setsummery] = useState("");
   const [data1, setdata1] = useState([]);
-  console.log("data1",data1);
+  console.log("data1", data1);
 
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const RoleAdd = ()=>{
+  const RoleAdd = () => {
 
     var config = {
       method: 'post',
       url: 'http://localhost:5000/addrole',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json'
       },
-      data : {
+      data: {
         "role": role,
         "summery": summery
       }
     };
-    
+
     axios(config)
-    .then(function (response) {
-    console.log(response.data);
-    handleClose()
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      .then(function (response) {
+        console.log(response.data);
+        handleClose()
+        setRefresh(!refresh)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   }
-  
+
   const columns = [
     {
       name: 'S No.',
@@ -55,29 +57,29 @@ function Role() {
       name: 'Role',
       selector: row => row.role_summery,
     }
-   
+
   ];
 
-function RoleGet(){
+  function RoleGet() {
 
-  var config = {
-    method: 'get',
-    url: 'http://localhost:5000/role',
-  };
-  
-  axios(config)
-  .then(function (response) {
-    console.log("okk",response.data);
-    setdata1(response.data)
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+    var config = {
+      method: 'get',
+      url: 'http://localhost:5000/role',
+    };
 
-useEffect(() => {
-  RoleGet()
-},[]);
+    axios(config)
+      .then(function (response) {
+        console.log("okk", response.data);
+        setdata1(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  useEffect(() => {
+    RoleGet()
+  },[refresh]);
 
 
   return (
@@ -89,7 +91,7 @@ useEffect(() => {
             <span className="navbar-toggler-icon" />
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-       
+
 
           </div>
         </div>
@@ -106,12 +108,12 @@ useEffect(() => {
           <div>
             <div className="mb-3">
               <label htmlFor="exampleInputEmail1" className="form-label">Role Name</label>
-              <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"  onChange={(e)=>setrole(e.target.value)}/>
+              <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={(e) => setrole(e.target.value)} />
               <div id="emailHelp" className="form-text">Enter You create role.</div>
             </div>
             <div className="mb-3">
               <label htmlFor="exampleInputPassword1" className="form-label">Role summery</label>
-              <input type="text" className="form-control" id="exampleInputPassword1" onChange={(e)=>setsummery(e.target.value)} />
+              <input type="text" className="form-control" id="exampleInputPassword1" onChange={(e) => setsummery(e.target.value)} />
               <div id="emailHelp" className="form-text">Role work summery.</div>
 
             </div>
@@ -122,7 +124,7 @@ useEffect(() => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={()=>RoleAdd()}>
+          <Button variant="primary" onClick={() => RoleAdd()}>
             Save Changes
           </Button>
         </Modal.Footer>
@@ -131,7 +133,7 @@ useEffect(() => {
       <DataTable
         columns={columns}
         data={data1}
-     
+
       />
 
     </>
