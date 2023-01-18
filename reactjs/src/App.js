@@ -1,6 +1,6 @@
-import logo from './logo.svg';
+
 import './App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route,useLocation } from "react-router-dom";
 import Showdata from './componet/Showdata';
 import Login1 from '../src/componet/validation/Login1'
 import Admin from './componet/Admin/Admin';
@@ -11,9 +11,15 @@ import Login from './componet/Admin/Login';
 import Home from './componet/Admin/Home';
 
 function App() {
+  const location = useLocation()
+
+console.log(location);
+
   return (
-    <BrowserRouter>
-    <Navbar/>
+
+    <>
+  {location.pathname != '/' ?  <Navbar/>: ""}
+   
       <Routes>
       <Route path='/' element={<Login/>}/>
 
@@ -29,7 +35,9 @@ function App() {
 
 
       </Routes>
-    </BrowserRouter>
+  
+    </>
+   
   );
 }
 

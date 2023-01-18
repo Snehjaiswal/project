@@ -188,10 +188,10 @@ app.post('/finduser', (req, res) => {
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    pool.query(' SELECT * FROM `users` JOIN `role` ON users.role_id = role.id  JOIN `permission_user` ON  users.permission_id=permission_user.id WHERE users.id='+req.body.id , (err, result) => {
+    pool.query(' SELECT * FROM `users` JOIN `role` ON users.role_id = role.id  JOIN `permission_user` ON  users.permission_id=permission_user.id WHERE users.id=' + req.body.id, (err, result) => {
 
         console.log("result-", result);
-        res.send({data:result})
+        res.send({ data: result })
     })
 
 })
@@ -203,19 +203,31 @@ app.post('/finduser', (req, res) => {
 app.post('/login', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    pool.query('SELECT * FROM `users` WHERE email="'+req.body.email+'" AND password="'+req.body.password+'"', (err, result) => {
+    pool.query('SELECT * FROM `users` WHERE email="' + req.body.email + '" AND password="' + req.body.password + '"', (err, result) => {
 
-       if(result.length > 0){
+        if (result.length > 0) {
 
-           res.send({ msg: "Login success!",data:result})
-       }else{
-        res.send({ msg: "Feild" })
+            res.send({ msg: "Login success!", data: result })
+        } else {
+            res.send({ msg: "Feild" })
 
-       }
+        }
     })
 
 })
 
+app.post('/delete_user', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    pool.query('DELETE FROM `users` WHERE id=' + req.body.id, (err, result) => {
+        console.log('DELETE FROM `users` WHERE id=' + req.body.id);
+
+        res.send({ msg: "Delete success" })
+
+
+    })
+
+})
 
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

@@ -11,6 +11,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 function Admin() {
 
     const [show, setShow] = useState(false);
+    const [show1, setShow1] = useState(false);
+
     const [refresh, setRefresh] = useState(false);
     const [name, setname] = useState("");
     const [email, setemail] = useState("");
@@ -19,6 +21,9 @@ function Admin() {
     const [data1, setdata1] = useState([]);
     const [data2, setdata2] = useState([]);
 
+    const [editData, seteditData] = useState([]);
+
+
     const [getuser, setuser] = useState([]);
 
     // console.log("roleId", roleId);
@@ -26,6 +31,14 @@ function Admin() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+  
+    const handleClose1 = () => setShow(false);
+    const handleShow1 = (e,row) => {
+        console.log("row",row);
+        seteditData(row)
+        setShow(true);
+
+    }
 
 
     useEffect(() => {
@@ -63,6 +76,12 @@ function Admin() {
         {
             name: 'create Date',
             selector: row => row.create_at.split('T')[0],
+        },
+        {
+            name: 'Action',
+            selector: row => <>  <span><i class="fas fa-edit" onClick={(e) => handleShow1(e,row)}></i> </span> <span> <i class="fa-solid fa-trash" onClick={(e) => deleteRow(e, row)}></i></span></>,
+
+
         }
     ];
 
@@ -172,39 +191,35 @@ function Admin() {
 
 
 
+    const deleteRow = (e, row) => {
+
+        console.log("row", row);
+
+
+        var config = {
+            method: 'post',
+            url: 'http://localhost:5000/delete_user',
+            data: {
+                id: row.id
+            }
+        };
+
+        axios(config)
+            .then(function (response) {
+                setRefresh(!refresh)
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+console.log("editData",editData);
+
+
     return (
         <>
-            {/* <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <div className="container-fluid">
-                    <a className="navbar-brand" href="#">Navbar</a>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon" />
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <form className="d-flex  ms-auto">
-                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button className="btn btn-outline-success" type="submit">Search</button>
-                        </form>
-                        <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="#">Home</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="#">Permission</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" onClick={()=>navigate('/role')}>Role</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="#">Profile</a>
-                            </li>
 
-
-                        </ul>
-
-                    </div>
-                </div>
-            </nav> */}
 
 
 
@@ -296,6 +311,90 @@ function Admin() {
             </Modal>
 
 
+
+
+            <Modal show={show1} onHide={handleClose1}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{editData.name} Edit</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+
+                    <div>
+                        <div className="mb-3">
+                            <label htmlFor="exampleInputEmail1" className="form-label">Name</label>
+                            <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={(e) => setname(e.target.value)} />
+                            <div id="emailHelp" className="form-text">Enter Your Name .</div>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="exampleInputPassword1" className="form-label">Email</label>
+                            <input type="text" className="form-control" id="exampleInputPassword1" onChange={(e) => setemail(e.target.value)} />
+                            <div id="emailHelp" className="form-text">Enter Your email.</div>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
+                            <input type="text" className="form-control" id="exampleInputPassword1" onChange={(e) => setpassword(e.target.value)} />
+                            <div id="emailHelp" className="form-text">Enter Your password.</div>
+                        </div>
+
+
+                        <div className="mb-3">
+                            {/* <label htmlFor="exampleInputPassword1" className="form-label">Role Id</label> */}
+
+                            <Dropdown>
+                                <Dropdown.Toggle variant="success" id="dropdown-basic" >
+                                    Select Role
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu >
+                                    {data1 && data1.map((val) => (
+
+                                        <Dropdown.Item onClick={() => setroleId(val.id)} key={val.id}>{val.Role}</Dropdown.Item>
+                                    )
+
+                                    )}
+
+                                </Dropdown.Menu>
+                            </Dropdown>
+
+
+                            <div id="emailHelp" className="form-text">Decide which Role.</div>
+                        </div>
+
+
+                        <div className="mb-3">
+
+                            <Dropdown>
+                                <Dropdown.Toggle variant="success" id="dropdown-basic" >
+                                    Permission
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu >
+                                    {data2 && data2.map((val) => (
+
+                                        <Dropdown.Item onClick={() => setroleId(val.id)} key={val.id}>{val.permission}</Dropdown.Item>
+                                    )
+
+                                    )}
+
+                                </Dropdown.Menu>
+                            </Dropdown>
+
+
+                            <div id="emailHelp" className="form-text">Decide which Role.</div>
+                        </div>
+                    </div>
+
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose1}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={() => userAdd()}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
 
 
 
