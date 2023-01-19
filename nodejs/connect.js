@@ -44,44 +44,44 @@ app.get('/', (req, res) => {
     })
 
 })
-app.post('/postdata',
-    signupValidation,
-    (req, res) => {
-        const errors = validationResult(req);
-        const data = req.body
+// app.post('/postdata',
+//     signupValidation,
+//     (req, res) => {
+//         const errors = validationResult(req);
+//         const data = req.body
 
-        if (!errors.isEmpty()) {
-            return res.status(400).json({
-                success: false,
-                errors: errors.array()
-            });
-        }
-        pool.query('INSERT INTO users set ?'
+//         if (!errors.isEmpty()) {
+//             return res.status(400).json({
+//                 success: false,
+//                 errors: errors.array()
+//             });
+//         }
+//         pool.query('INSERT INTO users set ?'
 
-            , data, (err, result, field) => {
+//             , data, (err, result, field) => {
 
-                if (err) {
-                    res.send(err)
-                }
-                else {
-                    res.status(200).json({
-                        success: true,
-                        message: 'Login successful',
-                    })
-                }
-            })
+//                 if (err) {
+//                     res.send(err)
+//                 }
+//                 else {
+//                     res.status(200).json({
+//                         success: true,
+//                         message: 'Login successful',
+//                     })
+//                 }
+//             })
 
-        const { otp, expires } = OtpUtil.generateOTP(data.email);
+//         const { otp, expires } = OtpUtil.generateOTP(data.email);
 
-        const url = ` OTP: ${otp} `; //url for email
+//         const url = ` OTP: ${otp} `; //url for email
 
-        sendMail.sendVerificationMail(data.email, url, "Verify your email address");
+//         sendMail.sendVerificationMail(data.email, url, "Verify your email address");
 
 
 
-        console.log("Error", Error);
+//         console.log("Error", Error);
 
-    })
+//     })
 
 
 app.put(`/update/:Id`, (req, res) => {
@@ -102,7 +102,7 @@ app.put(`/update/:Id`, (req, res) => {
 app.delete("/delete/:Id", (req, res) => {
     const id = req.params.Id
     console.log(id, '............');
-    pool.query(`DELETE FROM users WHERE id= ${id}`, (err, result) => {
+    pool.query(`DELETE FROM users WHERE user_id= ${id}`, (err, result) => {
         if (err) {
             res.send(err, "_____===============")
         }
@@ -188,7 +188,7 @@ app.post('/finduser', (req, res) => {
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    pool.query(' SELECT * FROM `users` JOIN `role` ON users.role_id = role.id  JOIN `permission_user` ON  users.permission_id=permission_user.id WHERE users.id=' + req.body.id, (err, result) => {
+    pool.query(' SELECT * FROM `users` JOIN `role` ON users.role_id = role.id  JOIN `permission_user` ON  users.permission_id=permission_user.id WHERE users.user_id=' + req.body.id, (err, result) => {
 
         console.log("result-", result);
         res.send({ data: result })
@@ -219,8 +219,8 @@ app.post('/login', (req, res) => {
 app.post('/delete_user', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    pool.query('DELETE FROM `users` WHERE id=' + req.body.id, (err, result) => {
-        console.log('DELETE FROM `users` WHERE id=' + req.body.id);
+    pool.query('DELETE FROM `users` WHERE user_id=' + req.body.id, (err, result) => {
+        console.log('DELETE FROM `users` WHERE user_id=' + req.body.id);
 
         res.send({ msg: "Delete success" })
 

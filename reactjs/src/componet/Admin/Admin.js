@@ -31,10 +31,10 @@ function Admin() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-  
+
     const handleClose1 = () => setShow(false);
-    const handleShow1 = (e,row) => {
-        console.log("row",row);
+    const handleShow1 = (e, row) => {
+        console.log("row121", row);
         seteditData(row)
         setShow(true);
 
@@ -51,7 +51,7 @@ function Admin() {
     const columns = [
         {
             name: 'S No.',
-            selector: row => row.id,
+            selector: row => row.user_id,
         },
         {
             name: 'Name',
@@ -79,7 +79,12 @@ function Admin() {
         },
         {
             name: 'Action',
-            selector: row => <>  <span><i class="fas fa-edit" onClick={(e) => handleShow1(e,row)}></i> </span> <span> <i class="fa-solid fa-trash" onClick={(e) => deleteRow(e, row)}></i></span></>,
+            selector: row =>
+                <>
+                    <span><i class="fas fa-edit" onClick={(e) => handleShow1(e, row)}></i></span>
+                    <span> <i class="fa-solid fa-trash" onClick={(e) => deleteRow(e, row)}></i></span>
+                </>
+            ,
 
 
         }
@@ -200,7 +205,7 @@ function Admin() {
             method: 'post',
             url: 'http://localhost:5000/delete_user',
             data: {
-                id: row.id
+                id: row.user_id
             }
         };
 
@@ -214,7 +219,7 @@ function Admin() {
             });
     }
 
-console.log("editData",editData);
+    console.log("editData", editData);
 
 
     return (
@@ -229,74 +234,75 @@ console.log("editData",editData);
             </Button>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title> Create User</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
                     <div>
-                        <div className="mb-3">
-                            <label htmlFor="exampleInputEmail1" className="form-label">Name</label>
-                            <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={(e) => setname(e.target.value)} />
-                            <div id="emailHelp" className="form-text">Enter Your Name .</div>
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="exampleInputPassword1" className="form-label">Email</label>
-                            <input type="text" className="form-control" id="exampleInputPassword1" onChange={(e) => setemail(e.target.value)} />
-                            <div id="emailHelp" className="form-text">Enter Your email.</div>
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-                            <input type="text" className="form-control" id="exampleInputPassword1" onChange={(e) => setpassword(e.target.value)} />
-                            <div id="emailHelp" className="form-text">Enter Your password.</div>
-                        </div>
+
+                        <div class="row">
+                            <div class="col-sm">
+                                <div className="mb-3">
+                                    <label htmlFor="exampleInputEmail1" className="form-label">Name</label>
+                                    <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={(e) => setname(e.target.value)} />
+                                    <div id="emailHelp" className="form-text">Enter Your Name .</div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm">
+                                <div className="mb-3">
+                                    <label htmlFor="exampleInputPassword1" className="form-label">Email</label>
+                                    <input type="text" className="form-control" id="exampleInputPassword1" onChange={(e) => setemail(e.target.value)} />
+                                    <div id="emailHelp" className="form-text">Enter Your email.</div>
+                                </div>
+
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
+                                <input type="text" className="form-control" id="exampleInputPassword1" onChange={(e) => setpassword(e.target.value)} />
+                                <div id="emailHelp" className="form-text">Enter Your password.</div>
+                            </div>
 
 
-                        <div className="mb-3">
-                            {/* <label htmlFor="exampleInputPassword1" className="form-label">Role Id</label> */}
+                            <div class="col-sm">
+                                <Dropdown>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic" >
+                                        Select Role
+                                    </Dropdown.Toggle>
 
-                            <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic" >
-                                    Select Role
-                                </Dropdown.Toggle>
+                                    <Dropdown.Menu >
+                                        {data1 && data1.map((val) => (
 
-                                <Dropdown.Menu >
-                                    {data1 && data1.map((val) => (
+                                            <Dropdown.Item onClick={() => setroleId(val.id)} >{val.Role}</Dropdown.Item>
+                                        )
 
-                                        <Dropdown.Item onClick={() => setroleId(val.id)} key={val.id}>{val.Role}</Dropdown.Item>
-                                    )
+                                        )}
 
-                                    )}
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </div>
+                            <div class="col-sm">
+                                <Dropdown>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic" >
+                                        Permission
+                                    </Dropdown.Toggle>
 
-                                </Dropdown.Menu>
-                            </Dropdown>
+                                    <Dropdown.Menu >
+                                        {data2 && data2.map((val) => (
 
+                                            <Dropdown.Item onClick={() => setroleId(val.id)} >{val.permission}</Dropdown.Item>
+                                        )
 
-                            <div id="emailHelp" className="form-text">Decide which Role.</div>
-                        </div>
+                                        )}
 
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </div>
 
-                        <div className="mb-3">
-
-                            <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic" >
-                                    Permission
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu >
-                                    {data2 && data2.map((val) => (
-
-                                        <Dropdown.Item onClick={() => setroleId(val.id)} key={val.id}>{val.permission}</Dropdown.Item>
-                                    )
-
-                                    )}
-
-                                </Dropdown.Menu>
-                            </Dropdown>
-
-
-                            <div id="emailHelp" className="form-text">Decide which Role.</div>
                         </div>
                     </div>
+<br /> 
 
 
                 </Modal.Body>
@@ -313,6 +319,9 @@ console.log("editData",editData);
 
 
 
+
+
+            {/* Edit table */}
             <Modal show={show1} onHide={handleClose1}>
                 <Modal.Header closeButton>
                     <Modal.Title>{editData.name} Edit</Modal.Title>
@@ -337,8 +346,9 @@ console.log("editData",editData);
                         </div>
 
 
-                        <div className="mb-3">
-                            {/* <label htmlFor="exampleInputPassword1" className="form-label">Role Id</label> */}
+
+
+                        <span>
 
                             <Dropdown>
                                 <Dropdown.Toggle variant="success" id="dropdown-basic" >
@@ -348,21 +358,13 @@ console.log("editData",editData);
                                 <Dropdown.Menu >
                                     {data1 && data1.map((val) => (
 
-                                        <Dropdown.Item onClick={() => setroleId(val.id)} key={val.id}>{val.Role}</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => setroleId(val.id)} >{val.Role}</Dropdown.Item>
                                     )
 
                                     )}
 
                                 </Dropdown.Menu>
                             </Dropdown>
-
-
-                            <div id="emailHelp" className="form-text">Decide which Role.</div>
-                        </div>
-
-
-                        <div className="mb-3">
-
                             <Dropdown>
                                 <Dropdown.Toggle variant="success" id="dropdown-basic" >
                                     Permission
@@ -371,7 +373,7 @@ console.log("editData",editData);
                                 <Dropdown.Menu >
                                     {data2 && data2.map((val) => (
 
-                                        <Dropdown.Item onClick={() => setroleId(val.id)} key={val.id}>{val.permission}</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => setroleId(val.id)} >{val.permission}</Dropdown.Item>
                                     )
 
                                     )}
@@ -380,8 +382,9 @@ console.log("editData",editData);
                             </Dropdown>
 
 
-                            <div id="emailHelp" className="form-text">Decide which Role.</div>
-                        </div>
+                        </span>
+
+
                     </div>
 
 
